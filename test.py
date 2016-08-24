@@ -1,8 +1,9 @@
-from novaclient import client
+import datetime
 from time import sleep
 from multiprocessing import Pipe, Process
 
-import datetime
+from novaclient import client
+
 
 class ApiUptime():
     def __init__(self, version, username, password, tenant, auth_url):
@@ -10,7 +11,7 @@ class ApiUptime():
 
     def _proc_helper(self, function, conn, additional_args=None):
         try:
-            if additional_args is not None:
+            if additional_args <> None:
                 function(additional_args)
             else:
                 function()
@@ -28,11 +29,9 @@ class ApiUptime():
             p, c = Pipe()
             pipes.append(p)
             Process(target=self._proc_helper, args=(function, c, additional_args)).start()
+            c.close()
             sleep(1)
-        try:
-            output = [pipe.recv() for pipe in pipes]
-        except:
-            pass
+        output = [pipe.recv() for pipe in pipes]
         # outputs is a list of True & False values, sum(output) will return
         # the amount of True values in the list (as True is equivalent to 1 in
         # Python and False is equivalent to 0)

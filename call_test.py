@@ -26,12 +26,11 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-t", "--times", metavar="<amount of seconds to run>",
-            required=False, default=60)
+            required=False, default=60, type=int)
 
 
 def entry_point():
-    cl_args = ArgumentParser()
-    cl_args = cl_args.parse_args()
+    cl_args = ArgumentParser().parse_args()
     if cl_args.services <> None:
         services = [service.strip() for service in cl_args.services.split(",")]
     else:
@@ -44,16 +43,10 @@ def entry_point():
         p, c = Pipe()
         pipes.append(p)
         Process(target=mad.uptime, args=(c,s,cl_args.times,cl_args.server_id,)).start()
+        c.close()
 
-    try:
-    	outputs = [pipe.recv() for pipe in pipes]
-    except:
-        pass
-
-    try:
-        final_output = {k: v for d in outputs for k, v in d.items()}
-    except:
-        pass
+	outputs = [pipe.recv() for pipe in pipes]
+    final_output = {k: v for d in outputs for k, v in d.items()}
 
     print json.dumps(final_output)
 
