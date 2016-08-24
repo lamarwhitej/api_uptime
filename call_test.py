@@ -32,7 +32,8 @@ class ArgumentParser(argparse.ArgumentParser):
 def entry_point():
     cl_args = ArgumentParser()
     cl_args = cl_args.parse_args()
-    #services = cl_args.services.split(",") or services_list
+    if cl_args <> None:
+        services = cl_args.services.split(",") or services_list
     services = services_list
     services = [service.strip() for service in services]
 
