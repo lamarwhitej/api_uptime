@@ -1,11 +1,9 @@
 import argparse
+from ConfigParser import SafeConfigParser
 import json
 from multiprocessing import Pipe, Process
-import sys
-import uuid
 
 import test
-from test_variables import *
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -31,10 +29,19 @@ class ArgumentParser(argparse.ArgumentParser):
 
 def entry_point():
     cl_args = ArgumentParser().parse_args()
-    if cl_args.services <> None:
-        services = [service.strip() for service in cl_args.services.split(",")]
-    else:
-        services = services_list
+
+    # Initialize Config Variables
+    config = SafeConfigParser()
+    config.read("os.cnf")
+    version = config.get("openstack", "version")
+    user = config.get("openstack", "user")
+    password = config.get("openstack", "password")
+    tenant = config.get("openstack", "tenant")
+    auth_url = config.get("openstack", "auth_url")
+    services_list = config.get("openstack", "version")
+    server_id = cl_args.server_id or config.get("openstack", "server_id")
+
+    services = [service.strip() for service in (cl_args.services or services_list).split(",")]
 
     mad = test.ApiUptime(version, user, password, tenant, auth_url)
 
@@ -42,7 +49,7 @@ def entry_point():
     for s in services:
         p, c = Pipe()
         pipes.append(p)
-        Process(target=mad.uptime, args=(c,s,cl_args.times,cl_args.server_id,)).start()
+        Process(target=mad.uptime, args=(c,s,cl_args.times,server_id,)).start()
         c.close()
 
 	outputs = [pipe.recv() for pipe in pipes]
