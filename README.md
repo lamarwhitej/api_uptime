@@ -5,17 +5,17 @@ To get started:
 1. Install novaclient within your environment
  - apt-get install python-novaclient #this is for ubuntu
 2. Pull the repository
-3. Setup test_variables config file
+3. Setup os.cnf file
 
 Setup Config
 =============
 To set up the config the required parameters are below:
 
-  * version = '2.1'
-  * user = ''
-  * password = ''
-  * tenant = ''
-  * auth_url = 'http://XX.XX.XXX.XXX:5000/v2.0'
+  * version=2.1
+  * user=
+  * password=
+  * tenant=
+  * auth_url=http://XX.XX.XXX.XXX:5000/v2.0
 
 __Note:__ If you are pinging Cinder for volumes you must have a server ID specified.
 
@@ -48,14 +48,13 @@ When running the script you can add a number to the command line and the script 
 
     #will run the test for 60 minutes
     python call_test.py images 60
-    
+
   * To change the time interval edit line 21 of __test.py__:
       - vi test.py
         - self.run_time = (start_time + timedelta (__minutes__=time)).strftime("%Y-%m-%dT%H:%M:%S%z")
         - self.run_time = (start_time + timedelta (__seconds__=time)).strftime("%Y-%m-%dT%H:%M:%S%z")
-   
+
 
 
 
 To find out more about novaclient Python API read here http://docs.openstack.org/developer/python-novaclient/api.html#module-novaclient
-
