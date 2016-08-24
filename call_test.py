@@ -32,10 +32,10 @@ class ArgumentParser(argparse.ArgumentParser):
 def entry_point():
     cl_args = ArgumentParser()
     cl_args = cl_args.parse_args()
-    if cl_args <> None:
-        services = cl_args.services.split(",") or services_list
-    services = services_list
-    services = [service.strip() for service in services]
+    if cl_args.services <> None:
+        services = [service.strip() for service in cl_args.services.split(",")]
+    else:
+        services = services_list
 
     mad = test.ApiUptime(version, user, password, tenant, auth_url)
 
@@ -51,11 +51,10 @@ def entry_point():
         pass
 
     try:
-	final_output = {}
-        [final_output.update(output) for output in outputs]
+        final_output = {k: v for d in outputs for k, v in d.items()}
     except:
-	pass
-    
+        pass
+
     print json.dumps(final_output)
 
 

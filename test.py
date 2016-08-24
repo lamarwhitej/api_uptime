@@ -22,17 +22,20 @@ class ApiUptime():
 
     def _uptime(self, conn, service, times, function, additional_args=None):
         start_time = datetime.datetime.now()
-	end_time = start_time + datetime.timedelta(0,float(times))
+        end_time = start_time + datetime.timedelta(0,float(times))
         pipes = []
         while end_time > datetime.datetime.now():
             p, c = Pipe()
             pipes.append(p)
             Process(target=self._proc_helper, args=(function, c, additional_args)).start()
-	    sleep(1)
+            sleep(1)
         try:
             output = [pipe.recv() for pipe in pipes]
-	except:
-	    pass
+        except:
+            pass
+        # outputs is a list of True & False values, sum(output) will return
+        # the amount of True values in the list (as True is equivalent to 1 in
+        # Python and False is equivalent to 0)
         self.report(conn, service, sum(output), len(output), str(start_time), str(datetime.datetime.now()))
 
     def uptime(self, conn, service, times, server_id=None):
