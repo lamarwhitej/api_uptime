@@ -1,8 +1,8 @@
 [openstack]
-version=2.1
-user=admin
-password=secrete
-tenant=admin
-auth_url=http://10.64.173.129:5000/v2.0
+version=''
+user=''
+password=''
+tenant=''
+auth_url=http://XX.XX.XXX.XXX:5000/v2.0
 services_list=cinder, nova, glance, neutron, swift
-container_name=CONTAINER
+container_name=None
