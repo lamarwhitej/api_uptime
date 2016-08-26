@@ -1,13 +1,20 @@
+
 import datetime
 from time import sleep
 from multiprocessing import Pipe, Process
 
-from novaclient import client
+from novaclient import client as novaclient
+from neutronclient.v2_0 import client as neutronclient
+from cinderclient import client as cinderclient
+from swiftclient import client as swiftclient
 
 
 class ApiUptime():
     def __init__(self, version, username, password, tenant, auth_url):
-        self.nova = client.Client(version, username, password, tenant, auth_url)
+        self.nova = novaclient.Client(version, username, password, tenant, auth_url)
+	    self.neutron = neutronclient.Client(username=username, password=password, project_name=tenant, auth_url=auth_url)
+	    self.cinder = cinderclient.Client('2', username, password, tenant, auth_url)
+	    self.swift = swiftclient.Connection(authurl=auth_url, user=username, tenant_name=tenant, key=password)
 
     def _proc_helper(self, function, conn, additional_args=None):
         try:
@@ -38,14 +45,16 @@ class ApiUptime():
         self.report(conn, service, sum(output), len(output), str(start_time), str(datetime.datetime.now()))
 
     def uptime(self, conn, service, times, server_id=None):
-        if service == "neutron":
-            self._uptime(conn, "neutron", times, self.nova.networks.list)
+        elif service == "neutron":
+	        self._uptime(conn, "neutron", times, self.neutron.show_subnet, server_id)
         elif service == "glance":
             self._uptime(conn, "glance", times, self.nova.images.list)
         elif service == "nova":
             self._uptime(conn, "nova", times, self.nova.servers.list)
         elif service == "cinder":
-            self._uptime(conn, "cinder", times, self.nova.volumes.get_server_volumes, server_id)
+            self._uptime(conn, "cinder", times, self.cinder.volumes.list)
+	    #elif service == "swift":
+	    #    self._uptime(conn, "swift", times, self.swift.head_container, 'CONTAINER')
 
     def report(self, conn, service, success, total, start_time, end_time):
         uptime_pct = 100 * (success/total)
