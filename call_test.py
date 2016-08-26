@@ -38,7 +38,7 @@ def entry_point():
     password = config.get("openstack", "password")
     tenant = config.get("openstack", "tenant")
     auth_url = config.get("openstack", "auth_url")
-    services_list = config.get("openstack", "version")
+    services_list = config.get("openstack", "services_list")
     server_id = cl_args.server_id or config.get("openstack", "server_id")
 
     services = [service.strip() for service in (cl_args.services or services_list).split(",")]
