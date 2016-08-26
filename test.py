@@ -13,8 +13,8 @@ class ApiUptime():
     def __init__(self, version, username, password, tenant, auth_url):
         self.nova = novaclient.Client(version, username, password, tenant, auth_url)
 	self.neutron = neutronclient.Client(username=username, password=password, project_name=tenant, auth_url=auth_url)
-	self.cinder = cinderclient.Client('2', username, password, tenant, auth_url, auth_version='2')
-	self.swift = swiftclient.Connection(authurl=auth_url, user=username, tenant_name=tenant, key=password)
+	self.cinder = cinderclient.Client('2', username, password, tenant, auth_url)
+	self.swift = swiftclient.Connection(authurl=auth_url, user=username, tenant_name=tenant, key=password, auth_version='2')
 
     def _proc_helper(self, function, conn, additional_args=None):
         try:
@@ -44,9 +44,9 @@ class ApiUptime():
         # Python and False is equivalent to 0)
         self.report(conn, service, sum(output), len(output), str(start_time), str(datetime.datetime.now()))
 
-    def uptime(self, conn, service, times, subnet_id=None, container_name=None):
+    def uptime(self, conn, service, times, container_name=None):
         if service == "neutron":
-	        self._uptime(conn, "neutron", times, self.neutron.show_subnet, subnet_id)
+	    self._uptime(conn, "neutron", times, self.neutron.list_subnets)
         elif service == "glance":
             self._uptime(conn, "glance", times, self.nova.images.list)
         elif service == "nova":
