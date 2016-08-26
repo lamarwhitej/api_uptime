@@ -45,7 +45,7 @@ class ApiUptime():
         self.report(conn, service, sum(output), len(output), str(start_time), str(datetime.datetime.now()))
 
     def uptime(self, conn, service, times, server_id=None):
-        elif service == "neutron":
+        if service == "neutron":
 	        self._uptime(conn, "neutron", times, self.neutron.show_subnet, server_id)
         elif service == "glance":
             self._uptime(conn, "glance", times, self.nova.images.list)
