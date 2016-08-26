@@ -12,9 +12,9 @@ from swiftclient import client as swiftclient
 class ApiUptime():
     def __init__(self, version, username, password, tenant, auth_url):
         self.nova = novaclient.Client(version, username, password, tenant, auth_url)
-	    self.neutron = neutronclient.Client(username=username, password=password, project_name=tenant, auth_url=auth_url)
-	    self.cinder = cinderclient.Client('2', username, password, tenant, auth_url)
-	    self.swift = swiftclient.Connection(authurl=auth_url, user=username, tenant_name=tenant, key=password)
+	self.neutron = neutronclient.Client(username=username, password=password, project_name=tenant, auth_url=auth_url)
+	self.cinder = cinderclient.Client('2', username, password, tenant, auth_url)
+	self.swift = swiftclient.Connection(authurl=auth_url, user=username, tenant_name=tenant, key=password)
 
     def _proc_helper(self, function, conn, additional_args=None):
         try:
