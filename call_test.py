@@ -52,7 +52,7 @@ def entry_point():
         Process(target=mad.uptime, args=(c,s,cl_args.times,server_id,)).start()
         c.close()
 
-	outputs = [pipe.recv() for pipe in pipes]
+    outputs = [pipe.recv() for pipe in pipes]
     final_output = {k: v for d in outputs for k, v in d.items()}
 
     print json.dumps(final_output)
