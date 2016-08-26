@@ -53,8 +53,8 @@ class ApiUptime():
             self._uptime(conn, "nova", times, self.nova.servers.list)
         elif service == "cinder":
             self._uptime(conn, "cinder", times, self.cinder.volumes.list)
-	    #elif service == "swift":
-	    #    self._uptime(conn, "swift", times, self.swift.head_container, 'CONTAINER')
+	elif service == "swift":
+	    self._uptime(conn, "swift", times, self.swift.head_container, 'CONTAINER')
 
     def report(self, conn, service, success, total, start_time, end_time):
         uptime_pct = 100 * (success/total)
