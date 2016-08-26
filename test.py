@@ -13,7 +13,7 @@ class ApiUptime():
     def __init__(self, version, username, password, tenant, auth_url):
         self.nova = novaclient.Client(version, username, password, tenant, auth_url)
 	self.neutron = neutronclient.Client(username=username, password=password, project_name=tenant, auth_url=auth_url)
-	self.cinder = cinderclient.Client('2', username, password, tenant, auth_url)
+	self.cinder = cinderclient.Client('2', username, password, tenant, auth_url, auth_version='2')
 	self.swift = swiftclient.Connection(authurl=auth_url, user=username, tenant_name=tenant, key=password)
 
     def _proc_helper(self, function, conn, additional_args=None):
@@ -44,9 +44,9 @@ class ApiUptime():
         # Python and False is equivalent to 0)
         self.report(conn, service, sum(output), len(output), str(start_time), str(datetime.datetime.now()))
 
-    def uptime(self, conn, service, times, server_id=None):
+    def uptime(self, conn, service, times, subnet_id=None, container_name=None):
         if service == "neutron":
-	        self._uptime(conn, "neutron", times, self.neutron.show_subnet, server_id)
+	        self._uptime(conn, "neutron", times, self.neutron.show_subnet, subnet_id)
         elif service == "glance":
             self._uptime(conn, "glance", times, self.nova.images.list)
         elif service == "nova":
@@ -54,7 +54,7 @@ class ApiUptime():
         elif service == "cinder":
             self._uptime(conn, "cinder", times, self.cinder.volumes.list)
 	elif service == "swift":
-	    self._uptime(conn, "swift", times, self.swift.head_container, 'CONTAINER')
+	    self._uptime(conn, "swift", times, self.swift.head_container, container_name)
 
     def report(self, conn, service, success, total, start_time, end_time):
         uptime_pct = 100 * (success/total)
