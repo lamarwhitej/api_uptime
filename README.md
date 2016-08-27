@@ -2,8 +2,8 @@ A python script that pings an OpenStack environment in-parallel using NovaClient
 
 To get started:
 
-1. Install novaclient within your environment
- - apt-get install python-novaclient #this is for ubuntu
+1. Install project client within your environment
+ - apt-get install python-PROJECTclient #this is for ubuntu
 2. Pull the repository
 3. Setup os.cnf file
 
@@ -17,7 +17,7 @@ To set up the config the required parameters are below:
   * tenant=
   * auth_url=http://XX.XX.XXX.XXX:5000/v2.0
 
-__Note:__ If you are pinging Cinder for volumes you must have a server ID specified.
+__Note:__ If you are pinging Swift you must have a container name specified.
 
 Running the script
 =================
