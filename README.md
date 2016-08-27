@@ -24,9 +24,9 @@ Running the script
 
 This script will parse the following arguments from the command-line and pulls additional data from os.cnf
 
-[-i/--server-id] [-s/--services] [-t/--time]
+[-c/--container-name] [-s/--services] [-t/--time]
 
---server-id will overwrite the value in os.cnf and is required to test cinder uptime.
+--container-name will overwrite the value in os.cnf and is required to test swift uptime.
 
 --services is a comma-delimited list of services, defaults to the value in os.cnf
 
@@ -36,14 +36,14 @@ To test against glance & nova:
 
     python call_test.py -s glance, nova
 
-Pinging Cinder (volumes)
-===============
+Pinging Swift (Object Storage)
+=============================
 
-If you are going to be pinging Cinder you need to add a server id.
+If you are going to be pinging Swift you need to add a container name.
 
-You can do this by adding it to the test_variables file or by adding it directly in the command line.
+You can do this by adding it to the os_cnf file or by adding it directly in the command line.
 
-    python call_test.py -s cinder -i the-server-id
+    python call_test.py -s swift -c name-of-container
 
 
 To find out more about novaclient Python API read here http://docs.openstack.org/developer/python-novaclient/api.html#module-novaclient
