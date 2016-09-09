@@ -44,7 +44,7 @@ class ApiUptime():
         # Python and False is equivalent to 0)
         self.report(conn, service, sum(output), len(output), str(start_time), str(datetime.datetime.now()))
 
-    def uptime(self, conn, service, times, container_name=None):
+    def uptime(self, conn, service, times):
         if service == "neutron":
 	    self._uptime(conn, "neutron", times, self.neutron.list_subnets)
         elif service == "glance":
@@ -54,7 +54,7 @@ class ApiUptime():
         elif service == "cinder":
             self._uptime(conn, "cinder", times, self.cinder.volumes.list)
 	elif service == "swift":
-	    self._uptime(conn, "swift", times, self.swift.head_container, container_name)
+	    self._uptime(conn, "swift", times, self.swift.get_account)
 
     def report(self, conn, service, success, total, start_time, end_time):
         uptime_pct = 100 * (success/total)
