@@ -21,11 +21,6 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument(
             "-t", "--times", metavar="<amount of seconds to run>",
             required=False, default=60, type=int)
-            
-        self.add_argument(
-            "-c", "--container-name", metavar="<name of swift container>",
-            required=False, default=None)
-
 
 def entry_point():
     cl_args = ArgumentParser().parse_args()
@@ -39,7 +34,6 @@ def entry_point():
     tenant = config.get("openstack", "tenant")
     auth_url = config.get("openstack", "auth_url")
     services_list = config.get("openstack", "services_list")
-    container_name = cl_args.container_name or config.get("openstack", "container_name")
 
     services = [service.strip() for service in (cl_args.services or services_list).split(",")]
 
@@ -49,7 +43,7 @@ def entry_point():
     for s in services:
         p, c = Pipe()
         pipes.append(p)
-        Process(target=mad.uptime, args=(c,s,cl_args.times,container_name,)).start()
+        Process(target=mad.uptime, args=(c,s,cl_args.times,)).start()
         c.close()
 
     outputs = [pipe.recv() for pipe in pipes]
