@@ -5,4 +5,3 @@ password=
 tenant=
 auth_url=http://XX.XX.XXX.XXX:5000/v2.0
 services_list=cinder, nova, glance, neutron, swift
-container_name=None
