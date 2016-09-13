@@ -1,7 +1,7 @@
-
 import datetime
 from time import sleep
 from multiprocessing import Pipe, Process
+import sys
 
 from novaclient import client as novaclient
 from neutronclient.v2_0 import client as neutronclient
@@ -30,9 +30,14 @@ class ApiUptime():
 
     def _uptime(self, conn, service, times, function, additional_args=None):
         start_time = datetime.datetime.now()
-        end_time = start_time + datetime.timedelta(0,float(times))
+        if times is True:
+            times = xrange(sys.maxint)
+        else:
+            times = xrange(times)
         pipes = []
-        while end_time > datetime.datetime.now():
+        for _ in times:
+            if conn.poll() and conn.recv() == "STOP":
+                break
             p, c = Pipe()
             pipes.append(p)
             Process(target=self._proc_helper, args=(function, c, additional_args)).start()
