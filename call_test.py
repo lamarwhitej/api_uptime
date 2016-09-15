@@ -71,7 +71,7 @@ def entry_point():
                     pipe.send("STOP")
                 break
 
-	outputs = [pipe.recv() for pipe in pipes]
+    outputs = [pipe.recv() for pipe in pipes]
     final_output = {k: v for d in outputs for k, v in d.items()}
 
     if output_file is None or output_file == '':
